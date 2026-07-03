@@ -6,7 +6,7 @@
 set -euo pipefail
 
 plugins_root="${HOME}/.claude/plugins/cache"
-project_dir="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+project_dir="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 
 # --- caveman dependency check ---
 if compgen -G "${plugins_root}/*/caveman/*/.claude-plugin/plugin.json" >/dev/null 2>&1 \
@@ -33,6 +33,16 @@ if [ -f "$map_file" ]; then
   fi
 fi
 
+# --- project memory index (fable mode) ---
+memory_index="${project_dir}/docs/pressurecooker/memory/MEMORY.md"
+memory_block=""
+if [ -s "$memory_index" ]; then
+  memory_block="
+
+PROJECT MEMORY INDEX (docs/pressurecooker/memory/ — read individual memory files on demand; memories are hints, verify against current code before relying on them):
+$(cat "$memory_index")"
+fi
+
 # --- skill routing map (the dispatcher) ---
 routing=$(cat <<'EOF'
 PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE acting:
@@ -50,7 +60,7 @@ PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE a
 EOF
 )
 
-ctx="pressurecooker plugin loaded. ${dep_line} ${map_line}
+ctx="pressurecooker plugin loaded. ${dep_line} ${map_line}${memory_block}
 
 ${routing}"
 
