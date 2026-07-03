@@ -82,8 +82,9 @@ Use the least powerful model that can handle each role.
 **STOP when:**
 - Pre-flight or a per-task check finds a cascade gap the plan doesn't cover
 - A blocker you can't resolve (missing dependency, unclear instruction)
-- A regression check goes red (an existing must-stay-green test breaks) and the fix isn't obvious
 - Verification fails repeatedly
+
+**When a regression goes red** (an existing must-stay-green test breaks) or a bug surfaces during execution: do NOT patch symptoms or loosen tests. **REQUIRED SUB-SKILL:** Use `pressurecooker:systematic-debugging` — investigation runs through its evidence-gatherer subagent (the controller still never edits), fixes go through an implementer subagent. If it reveals an architecture problem the plan didn't anticipate, stop and escalate.
 
 **Ask rather than guess.**
 
@@ -97,7 +98,7 @@ Use the least powerful model that can handle each role.
 - Skip either review (spec compliance OR code quality), or run quality before spec is ✅
 - Dispatch multiple implementer subagents in parallel (conflicts)
 - Make a subagent read the plan file (paste full text instead)
-- Treat a green new test with a broken must-stay-green test as progress — it's a regression; stop and fix
+- Treat a green new test with a broken must-stay-green test as progress — it's a regression; route to `pressurecooker:systematic-debugging`, never patch the symptom or loosen the test
 - Edit files under reference-only paths (Global Constraints) — samples are read-only; a task that seems to require it means the plan is wrong, escalate
 
 ## Integration
@@ -105,6 +106,7 @@ Use the least powerful model that can handle each role.
 **Required workflow skills:**
 - **pressurecooker:using-git-worktrees** — isolated workspace + baseline regression reference
 - **pressurecooker:writing-plans** — creates the plan (with Blast Radius + per-task Impact) this skill executes
+- **pressurecooker:systematic-debugging** — any red regression or bug during execution routes there (root cause, never symptom patches)
 - **pressurecooker:finishing-a-development-branch** — complete development after all tasks
 
 **Prompt templates (in this skill directory):**

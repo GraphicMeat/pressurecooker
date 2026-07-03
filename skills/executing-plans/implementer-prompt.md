@@ -44,6 +44,9 @@ Task tool (general-purpose):
     2. Run the new test(s) to green
     3. **Run the Must-stay-green tests (Step 4b regression check).** If any go red, fix
        before proceeding — a passing new test with a broken existing test is a failure.
+       Fix the root cause only: no symptom patches (no try/catch around the failure, no
+       special-case guards at the crash site, no skipped/loosened tests, no masking
+       defaults). If the root cause is outside this task's scope, report BLOCKED.
     4. Honor the compatibility findings: if the change needs a default, migration, or a
        touched caller to stay compatible with existing code, do it (within task scope).
     5. Commit your work
