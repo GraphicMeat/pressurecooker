@@ -27,6 +27,13 @@ Task tool (general-purpose):
     sample/reference folders: their code is not a consumer, their tests are not
     must-stay-green candidates, and nothing may modify them.]
 
+    ## Codebase map
+
+    [If `docs/pressurecooker/codebase-map/MAP.md` exists and is fresh, paste its
+    Module Graph fan-in table + the relevant module lines, or tell the analyst to
+    read it first. Consumer and cascade answers START from the map, then verify
+    against current code — the map accelerates, it doesn't replace reading.]
+
     ## Your job
 
     Working from the CURRENT codebase, determine for the change as a whole:
@@ -79,6 +86,12 @@ Task tool (general-purpose):
 
     [Paste the Global Constraints' reference-only paths, or "none" — not consumers,
     not must-stay-green, never modified.]
+
+    ## Codebase map
+
+    [Relevant slice of `docs/pressurecooker/codebase-map/MAP.md` if fresh (fan-in /
+    consumers of this task's touched modules), or "none". Start from it, verify
+    against current code.]
 
     ## Your job (scoped to this task only — keep it light)
 

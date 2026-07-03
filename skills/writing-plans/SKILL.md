@@ -33,6 +33,7 @@ Before mapping files, assess what this change touches beyond the new code. This 
 - **Data & compatibility:** Any schema, config, migration, serialization, or backward-compatibility concerns? Note version floors and anything a downstream consumer would notice.
 - **Make-sense / fit check:** Does this change fit the existing patterns and how the surrounding feature already behaves (per industry norms where they apply)? If the change forces the codebase into an unnatural shape, that's a signal the boundary is wrong — consider extracting the feature into its own module (TDD + KISS) rather than forcing it in. Reflect that decision in the File Structure.
 - **Reference-only paths:** If the spec lists reference-only paths (sample folders marked by triage), exclude them from this analysis — sample code is not a consumer and its tests are never must-stay-green targets. Carry the paths into Global Constraints instead so every task inherits the "never modify" rule.
+- **Secure data:** Does the change touch credentials, tokens, PII, payment or other secure data? Copy the spec's `Secure-data fields:` line into Global Constraints (names only, never values); every task touching those fields carries `pressurecooker:secure-data-handling` rules in its text — no secrets in code, logs, fixtures, or artifacts.
 
 Summarize the blast radius in a few lines. Every task that touches an at-risk area must carry the relevant items forward in its own `Impact:` block.
 
@@ -49,6 +50,19 @@ Files that change together should live together. Split by responsibility, not by
 In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
+
+## Refactoring Plans
+
+When the plan's goal is refactoring (extraction, consolidation, restructuring) — including plans arriving from `pressurecooker:systematic-debugging` Phase 5 or from `pressurecooker:analyzing-codebase` Top 5 issues — these rules override the generic task shape:
+
+- **Plan before any work.** No exploratory refactoring; module order and test gates are decided here, not discovered mid-flight.
+- **Task 1 is ALWAYS characterization tests.** Pin the CURRENT behavior of every affected module before anything moves: golden-master tests over representative inputs and edge cases; a **drift matrix** when duplicated copies disagree (which copy does what, per input class); at least one test exercising the real production call order when shared mutable state is involved. Suite green before any refactor task starts. "Pure refactor, behavior identical by definition" is not an exemption — that claim is exactly what characterization tests verify.
+  - **Depth scales with risk, floor doesn't move.** Pure code movement (files/renames, no logic edits) may scale Task 1 down to: full-suite before/after fingerprint (identical passes AND failures AND skips), targeted tests for every compiler-blind spot (dynamic imports, string-built paths, serialized class references, reflection), plus real characterization tests for any high-stakes logic being moved (money math, state transitions) regardless of movement purity. "The existing suite is ancient/half-skipped, don't test old code" concedes the safety net is missing — that raises the requirement, never lowers it.
+  - **Decision gate:** drifted copies disagree → canonical behavior must be decided, in the plan. Product-visible divergence (two surfaces showing users different numbers) → escalate to the human before tasks are written.
+- **One module per task.** Order by blast radius: lowest-risk consumer first (proves the migration pattern), highest-stakes/thinnest-tested module LAST, with the pattern proven and its characterization tests already in place. Never "move it all in one go."
+- **Every task ends with the full gate:** refactor step → run characterization + must-stay-green suites → fix until green → commit. Never start the next module on red. Red characterization test = the refactor changed behavior — **fix the refactor, never the test.** A deliberate expectation change must reference the drift-matrix decision; no silent test edits.
+- **No blended behavior changes.** Bug fixes and improvements ("since you're in there anyway") are their own task at the END — after all migration tasks, isolated in one commit whose test diff IS the report of what changed — or a separate plan. Never inside a migration task: with mixed changes every diff becomes ambiguous (refactor error or intended fix?).
+- **Cut line under deadline pressure:** scope — later modules slip to a follow-up plan; the trailing behavior-change task slips easily (post-consolidation it's a one-file change). NEVER cut Task 1, never cut per-task test gates.
 
 ## Task Right-Sizing
 

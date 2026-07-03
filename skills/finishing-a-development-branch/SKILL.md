@@ -17,7 +17,7 @@ Guide completion of development work by presenting clear options and handling ch
 
 ### Step 1: Verify Tests
 
-**Before presenting options, verify tests pass:**
+**Before presenting options, verify tests pass** (`pressurecooker:verification-before-completion` — fresh full-suite output, not a remembered result):
 
 ```bash
 # Run project's FULL test suite
@@ -121,6 +121,8 @@ Then: Cleanup worktree (Step 6), then delete branch:
 ```bash
 git branch -d <feature-branch>
 ```
+
+**Codebase map delta update:** if `docs/pressurecooker/codebase-map/MAP.md` exists, refresh it after the merge — re-scan only the modules this branch touched (`pressurecooker:analyzing-codebase` scripts), update the affected map sections and the `analyzed-at` hash, commit. Delta only; full re-analysis is for major restructuring.
 
 #### Option 2: Push and Create PR
 

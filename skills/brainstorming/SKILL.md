@@ -21,7 +21,7 @@ Every project goes through this process. A todo list, a single-function utility,
 
 You MUST create a task for each of these items and complete them in order:
 
-1. **Explore project context** — check files, docs, recent commits, architecture
+1. **Explore project context** — if a fresh codebase map exists (`docs/pressurecooker/codebase-map/MAP.md`), read it FIRST and explore only what it lacks; for a big feature with no fresh map, run `pressurecooker:analyzing-codebase` before proceeding. Otherwise check files, docs, recent commits, architecture
 2. **Explore industry practices** — how does this feature work in the industry: common patterns, popular implementations, best practices. Only for user-facing / product / UX features; skip for internal mechanics (see guard below).
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation, informed by industry practices, feature popularity, and best practices
@@ -120,6 +120,7 @@ digraph brainstorming {
   - (User preferences for spec location override this default)
 - **Write the spec in normal, readable prose — NOT caveman.** The spec is a review artifact; the user-review gate depends on it being clear and complete. Caveman stays for chat, not for the written spec.
 - If triage marked any folder **reference-only** (a sample to learn from), the spec MUST include a `Reference-only paths:` line listing them — read for patterns, never modified. writing-plans copies this line into the plan's Global Constraints.
+- If the feature touches credentials, tokens, PII, payment or other secure data, the spec MUST include a `Secure-data fields:` line naming those fields/flows (names only, NEVER example values) — writing-plans copies it into Global Constraints and `pressurecooker:secure-data-handling` rules apply to every task touching them.
 - If the `elements-of-style` skill is present, use it to tighten the spec's writing. If it is not installed, suggest installing it: https://github.com/obra/the-elements-of-style
 - caveman (`caveman@caveman`) is a required dependency of this plugin; if it is somehow missing, suggest installing it.
 - Commit the design document to git
