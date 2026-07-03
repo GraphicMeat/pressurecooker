@@ -132,6 +132,8 @@ if [ -f go.mod ]; then go mod download; fi
 
 ## Step 4: Verify Clean Baseline
 
+**Check project memory first:** if `docs/pressurecooker/memory/` contains a `map` memory recording the test command and baseline shape, use it — verify cheaply by running the recorded command rather than re-deriving it. Memory missing or wrong → detect as below (and fix or delete the wrong memory).
+
 Run tests to ensure workspace starts clean:
 
 ```bash
@@ -146,6 +148,8 @@ npm test / cargo test / pytest / go test ./...
 **Baseline is the regression reference.** Record the passing test count. This clean baseline is what the writing-plans "must-stay-green" set and the per-task Step 4b regression check are measured against — if a task turns any of these red, it introduced a regression.
 
 **Reference-only folders are excluded from the baseline.** If a sample folder (marked reference-only by `pressurecooker:incoming-folder-triage`) carries its own tests and the runner picks them up, scope the test command to the project's own suite — sample tests are not regression targets and must not inflate or skew the baseline count.
+
+**Write the map memory:** after a successful baseline, record the test command and baseline shape into project memory — `docs/pressurecooker/memory/<slug>.md` with frontmatter (`name`, `description`, `type: map`), normal prose, plus a one-line entry in `docs/pressurecooker/memory/MEMORY.md` (`- [title](file.md) — hook`). Update the existing map memory rather than creating a near-duplicate; never store what git or the code already records.
 
 ### Report
 

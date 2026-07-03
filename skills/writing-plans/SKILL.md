@@ -28,6 +28,7 @@ If the spec covers multiple independent subsystems, it should have been broken i
 
 Before mapping files, assess what this change touches beyond the new code. This is the "does it break anything else?" pass, and it feeds the decomposition below.
 
+- **Project memory first:** read `docs/pressurecooker/memory/MEMORY.md` if present. `retro` memories record past misses (cascade gaps, regressions, review catches) — each relevant one becomes a checklist item this plan must not repeat. `map` memories feed the consumer graph below. Memories are hints — verify against current code; missing memory = proceed as today.
 - **Consumers:** Who calls / imports / depends on the code being changed? List the call sites, public interfaces, and contracts (APIs, events, schemas) that other code relies on.
 - **Existing test coverage:** Which existing tests exercise the affected paths? These become the "must-stay-green" set for the tasks that touch them.
 - **Data & compatibility:** Any schema, config, migration, serialization, or backward-compatibility concerns? Note version floors and anything a downstream consumer would notice.
@@ -127,6 +128,12 @@ draw from this.]
   task is purely additive with no consumers]
 - Must-stay-green: [exact existing tests/files that must still pass after
   this task, drawn from the Blast Radius]
+- Risk: [additive | modifying | interface-changing — derived mechanically:
+  additive = Breaks-risk empty, only new code with no existing consumers;
+  modifying = touches existing code/behavior but no public interface or
+  contract changes; interface-changing = changes a public interface, schema,
+  serialized format, or any contract with consumers outside this task's
+  files. In doubt between tiers → pick the higher one.]
 ```
 
 Then the TDD step cycle:
@@ -193,6 +200,7 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 3. **Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 4. **Regression coverage:** Does every task that touches existing code name the existing tests that must stay green (Must-stay-green), and does its cycle include the Step 4b regression check?
 5. **Fit check:** Is each change consistent with existing patterns and how the surrounding feature already behaves (industry norms where they apply)? A change that technically works but breaks the feature's expected behavior is a defect.
+6. **Memory & risk check:** Did you consult `retro` memories, and does any task repeat a recorded past miss? Does every task's Impact block carry a `Risk:` tier?
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
