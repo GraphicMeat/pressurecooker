@@ -45,6 +45,13 @@ Task tool (general-purpose):
        - a correct fix would need the same edit at N call sites
        - shared mutable state read/written from multiple places (enumerate all)
 
+    ## Redaction rule
+
+    Never include secret values (keys, tokens, credentials, PII, payment data) in your
+    report — not from logs, error messages, configs, or code you read. Reference by name
+    and fingerprint (sha256 prefix) only. A hardcoded secret you find IS evidence: report
+    file:line and kind, never the value.
+
     ## Report
 
     - **Root-cause hypothesis:** one sentence — "X because Y" (or "not yet determined" + what's missing)

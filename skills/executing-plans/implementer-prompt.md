@@ -32,6 +32,13 @@ Task tool (general-purpose):
     useful, but NEVER modify anything under them. If the task appears to require editing
     one, STOP and report BLOCKED — the plan is wrong, don't work around it.]
 
+    ## Secure-data fields
+
+    [Fields/flows carrying secrets, PII, or payment data from Global Constraints, or
+    "none". Rules: never hardcode, log, or fixture a secret value; secrets come from
+    env/secret manager with no defaults; diagnostics use fingerprints (sha256 prefix),
+    never values; test against real environments via CI-masked env vars with skip-if-unset.]
+
     ## Before You Begin
 
     If you have questions about the requirements, approach, dependencies, or anything

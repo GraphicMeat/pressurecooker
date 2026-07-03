@@ -15,15 +15,20 @@ Inspired by the [superpowers](https://github.com/obra/superpowers) plugin.
 │   └── marketplace.json    # Lets this repo be added as a plugin marketplace
 ├── skills/                 # The workflow skill chain (SKILL.md per directory)
 │   ├── incoming-folder-triage/
+│   ├── analyzing-codebase/ # + duplication / call-graph scan scripts
 │   ├── brainstorming/
 │   ├── writing-plans/
 │   ├── using-git-worktrees/
 │   ├── executing-plans/    # + blast-radius / implementer / reviewer prompts
 │   ├── systematic-debugging/  # + evidence-gatherer prompt, tracing/waiting/defense techniques
-│   └── finishing-a-development-branch/
+│   ├── finishing-a-development-branch/
+│   ├── quick-task/         # small-fix path with escalation triggers
+│   ├── secure-data-handling/
+│   ├── verification-before-completion/
+│   └── silent-dev/         # minimal-narration output discipline
 └── hooks/                  # Event hooks
     ├── hooks.json
-    └── session-start.sh
+    └── session-start.sh    # dep check + skill routing map + map staleness
 ```
 
 ## Workflow
@@ -40,10 +45,17 @@ brainstorming → writing-plans → using-git-worktrees → executing-plans → 
 - **executing-plans** — always subagent-driven: pre-flight + per-task blast radius, implementer + two-stage review per task
 - **finishing-a-development-branch** — verify, then merge / PR / keep / discard
 
-Two standalone skills support the chain:
+Standalone skills support the chain:
 
 - **incoming-folder-triage** — a dropped folder is a sample or a target; ask before touching (reference-only paths propagate through the whole chain)
+- **analyzing-codebase** — read-only recon before brainstorming big features: stack, architecture, duplication scan (never skipped), call graph, top-5 refactoring issues → committed map at `docs/pressurecooker/codebase-map/MAP.md` that brainstorming, blast-radius analysts, and debugging all consume; kept fresh by post-merge delta updates
 - **systematic-debugging** — root cause before fixes: anti-workaround gate, architecture-confusion check, refactor-by-extraction (characterization tests → extract module → verify → fix); any red regression in the chain routes here
+- **quick-task** — small clearly-scoped fixes without the full chain, but with the floor intact (split unrelated changes, failing test first for behavior changes, consumer check) and hard escalation triggers into the chain
+- **secure-data-handling** — secrets and secure data never surface: fingerprint-don't-print diagnostics, env/secret-manager storage patterns, `Secure-data fields:` propagation through spec → plan → subagents → reviews
+- **verification-before-completion** — no done/fixed/passing claims without fresh command output; controllers independently verify subagent claims via the diff
+- **silent-dev** — minimal-narration output discipline for coding sessions; artifacts, commits, and security warnings stay normal prose
+
+The SessionStart hook injects the skill routing map every session, so the right skill fires without being remembered, and reports codebase-map staleness.
 
 ## Dependencies
 

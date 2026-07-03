@@ -47,6 +47,10 @@ Task tool (general-purpose):
     **Reference-only paths:** confirm the diff touches NOTHING under these paths — any
       edit there is Critical.
 
+    **Secure data:** confirm no secret value (key, token, credential, PII, payment data)
+      appears in the diff — code, tests, fixtures, logs, error messages, comments. A
+      surfaced secret is always Critical (rotation needed, not just removal).
+
     **Decomposition:** does each file have one clear responsibility with a well-defined
       interface? Can units be understood and tested independently? Does it follow the
       plan's file structure?

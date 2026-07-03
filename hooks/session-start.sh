@@ -1,25 +1,71 @@
 #!/usr/bin/env bash
 # SessionStart hook for the pressurecooker plugin.
-# pressurecooker requires the `caveman` plugin. plugin.json declares it as a
-# formal dependency (auto-resolved within the same marketplace); this hook is a
-# fallback check for cross-marketplace installs where auto-resolution won't fire.
+# 1. Verifies the `caveman` dependency (fallback for cross-marketplace installs).
+# 2. Injects the skill-routing map so pressurecooker skills fire without being remembered.
+# 3. Surfaces codebase-map staleness when a map exists.
 set -euo pipefail
 
 plugins_root="${HOME}/.claude/plugins/cache"
+project_dir="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 
-# caveman is installed if any cache/<marketplace>/caveman/<version>/ manifest exists.
+# --- caveman dependency check ---
 if compgen -G "${plugins_root}/*/caveman/*/.claude-plugin/plugin.json" >/dev/null 2>&1 \
    || compgen -G "${plugins_root}/*/caveman/.claude-plugin/plugin.json" >/dev/null 2>&1; then
-  ctx="pressurecooker plugin loaded. caveman dependency present."
+  dep_line="caveman dependency present."
 else
-  ctx="pressurecooker WARNING: required plugin \`caveman\` not detected. Install it: /plugin install caveman@caveman"
+  dep_line="WARNING: required plugin \`caveman\` not detected. Install it: /plugin install caveman@caveman"
+fi
+
+# --- codebase map staleness ---
+map_file="${project_dir}/docs/pressurecooker/codebase-map/MAP.md"
+map_line="No codebase map found — run pressurecooker:analyzing-codebase before brainstorming any big feature."
+if [ -f "$map_file" ]; then
+  map_hash=$(grep -m1 '^analyzed-at:' "$map_file" | awk '{print $2}' || true)
+  if [ -n "${map_hash:-}" ] && git -C "$project_dir" rev-parse --verify -q "$map_hash" >/dev/null 2>&1; then
+    drift=$(git -C "$project_dir" rev-list --count "${map_hash}..HEAD" 2>/dev/null || echo "?")
+    if [ "$drift" != "?" ] && [ "$drift" -gt 30 ]; then
+      map_line="Codebase map is STALE (${drift} commits behind) — refresh via pressurecooker:analyzing-codebase before relying on it."
+    else
+      map_line="Codebase map present (${drift:-?} commits behind): docs/pressurecooker/codebase-map/MAP.md — read it before exploring."
+    fi
+  else
+    map_line="Codebase map present but analyzed-at hash unreadable — verify docs/pressurecooker/codebase-map/MAP.md freshness manually."
+  fi
+fi
+
+# --- skill routing map (the dispatcher) ---
+routing=$(cat <<'EOF'
+PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE acting:
+- New folder dropped/referenced with unclear role -> pressurecooker:incoming-folder-triage
+- Big feature, unfamiliar codebase, or stale/missing map -> pressurecooker:analyzing-codebase
+- Any creative work (feature, component, behavior change) -> pressurecooker:brainstorming (hard gate: design approval before implementation)
+- Approved spec/requirements, multi-step work -> pressurecooker:writing-plans (refactors follow its Refactoring Plans rules: characterization tests first, one module per task)
+- Executing a written plan -> pressurecooker:using-git-worktrees then pressurecooker:executing-plans (always subagent-driven)
+- ANY bug, test failure, regression, or unexpected behavior -> pressurecooker:systematic-debugging BEFORE proposing fixes (root cause, never symptom patches)
+- Small clear fix not worth the full chain -> pressurecooker:quick-task (still test-first; escalates when scope grows)
+- Code touching credentials, tokens, PII, payment or other secure data -> pressurecooker:secure-data-handling (secrets never surface in logs, output, commits, artifacts)
+- About to claim done/fixed/passing, or commit/PR -> pressurecooker:verification-before-completion (evidence before claims)
+- All tasks done, integrating work -> pressurecooker:finishing-a-development-branch
+- Coding sessions default to pressurecooker:silent-dev output discipline (minimal narration; artifacts stay normal prose)
+EOF
+)
+
+ctx="pressurecooker plugin loaded. ${dep_line} ${map_line}
+
+${routing}"
+
+# JSON-escape via jq if available, else minimal escaper.
+if command -v jq >/dev/null 2>&1; then
+  ctx_json=$(printf '%s' "$ctx" | jq -Rs .)
+else
+  ctx_json="\"$(printf '%s' "$ctx" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | awk '{printf "%s\\n", $0}')\""
 fi
 
 cat <<JSON
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "${ctx}"
+    "additionalContext": ${ctx_json}
   }
 }
 JSON
