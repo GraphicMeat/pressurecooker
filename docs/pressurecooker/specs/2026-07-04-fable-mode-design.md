@@ -1,7 +1,7 @@
 # Fable Mode: Project Memory, Learning Loop, and Resource-Tiered Execution
 
 **Date:** 2026-07-04
-**Status:** Approved design, pending implementation plan
+**Status:** Implemented 2026-07-04 (plan: `docs/pressurecooker/plans/2026-07-04-fable-mode.md`)
 
 ## Goal
 
