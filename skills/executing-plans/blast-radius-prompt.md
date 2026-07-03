@@ -34,6 +34,13 @@ Task tool (general-purpose):
     read it first. Consumer and cascade answers START from the map, then verify
     against current code — the map accelerates, it doesn't replace reading.]
 
+    ## Known consumer map (from project memory)
+
+    [Paste the `map` memory's consumer/contract graph from
+    docs/pressurecooker/memory/, or "none". Verify DELTAS against the current
+    codebase instead of cold discovery, and report corrections — the controller
+    writes them back to memory after pre-flight.]
+
     ## Your job
 
     Working from the CURRENT codebase, determine for the change as a whole:

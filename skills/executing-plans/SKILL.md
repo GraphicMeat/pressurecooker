@@ -30,7 +30,9 @@ Execute an implementation plan. **All development is subagent-driven, always.** 
 
 Dispatch a blast-radius analyst subagent (`./blast-radius-prompt.md`, preflight mode).
 
-Give it: the plan's `Blast Radius` + `Global Constraints`, the list of fields/interfaces/contracts the plan adds or changes, and access to the current codebase.
+Give it: the plan's `Blast Radius` + `Global Constraints`, the list of fields/interfaces/contracts the plan adds or changes, access to the current codebase, and — if project memory holds a `map` consumer/contract graph (`docs/pressurecooker/memory/`) — that map, so it verifies deltas instead of cold discovery.
+
+After pre-flight: write the confirmed/corrected consumer-contract map back to project memory (`type: map`, update the existing file, refresh its MEMORY.md line) so the next plan starts warm.
 
 It answers, for the change as a whole:
 - **Forward compatibility:** for each added/changed field or interface, does existing code keep working with it as-is?
@@ -45,13 +47,21 @@ Output: a confirmed/expanded must-stay-green set, and a list of **cascade gaps**
 
 For each task, in order. Every box below is a fresh subagent — you only coordinate.
 
-**a. Per-task compatibility check.** Dispatch the blast-radius analyst (`./blast-radius-prompt.md`, per-task mode) scoped to THIS task's added/changed fields only. Lighter than pre-flight: does this task's change work with existing consumers, and does it cascade to fields the task doesn't touch? Hand its findings to the implementer. If it surfaces a cascade beyond the task's scope, decide: widen the task's context, or stop and escalate.
+**Ceremony scales to the task's `Risk:` tier** (from its Impact block; task missing a tier → treat as interface-changing — resolve up). Tiers relax ceremony ONLY — must-stay-green rules, Step 4b, and reference-only/secure-data checks never relax:
 
-**b. Implementer.** Dispatch the implementer subagent (`./implementer-prompt.md`) with the task's full text, scene-setting context, the compat findings from (a), the Must-stay-green set, and any reference-only paths from Global Constraints. It does TDD, runs the Step 4b regression check, commits, self-reviews, reports status.
+| Tier | (a) Per-task analyst | (c)+(d) Reviews |
+|------|---------------------|-----------------|
+| additive | skipped | single combined reviewer (`./combined-reviewer-prompt.md`) — spec + quality + must-stay-green in one dispatch |
+| modifying | skipped when the pre-flight report already covers the touched area; otherwise dispatched | two-stage (spec, then quality) as below |
+| interface-changing | always dispatched | full two-stage as below |
 
-**c. Spec compliance review.** Dispatch the spec reviewer (`./spec-reviewer-prompt.md`). If ❌, the implementer subagent fixes and the reviewer re-reviews. Loop until ✅.
+**a. Per-task compatibility check** (per tier table). Dispatch the blast-radius analyst (`./blast-radius-prompt.md`, per-task mode) scoped to THIS task's added/changed fields only. Lighter than pre-flight: does this task's change work with existing consumers, and does it cascade to fields the task doesn't touch? Hand its findings to the implementer. If it surfaces a cascade beyond the task's scope, decide: widen the task's context, or stop and escalate.
 
-**d. Code quality review.** Only after spec is ✅. Dispatch the code quality reviewer (`./code-quality-reviewer-prompt.md`) — it also confirms the Must-stay-green set is still green and no cascade was left unhandled. If issues, implementer fixes, reviewer re-reviews. Loop until approved.
+**b. Implementer** (always). Dispatch the implementer subagent (`./implementer-prompt.md`) with the task's full text, scene-setting context, the compat findings from (a) if any, the Must-stay-green set, and any reference-only paths / secure-data fields from Global Constraints. It does TDD, runs the Step 4b regression check, commits, self-reviews, reports status.
+
+**c. Spec compliance review.** Additive tier: dispatch the combined reviewer instead (spec + quality in one; ❌ on either dimension loops the implementer, then re-review). Otherwise dispatch the spec reviewer (`./spec-reviewer-prompt.md`). If ❌, the implementer subagent fixes and the reviewer re-reviews. Loop until ✅.
+
+**d. Code quality review** (modifying and interface-changing tiers). Only after spec is ✅. Dispatch the code quality reviewer (`./code-quality-reviewer-prompt.md`) — it also confirms the Must-stay-green set is still green and no cascade was left unhandled. If issues, implementer fixes, reviewer re-reviews. Loop until approved.
 
 **e. Mark the task complete in TodoWrite.**
 
@@ -62,13 +72,21 @@ After all tasks pass both reviews:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use `pressurecooker:finishing-a-development-branch`.
 
-## Model Selection
+## Model Routing
 
-Use the least powerful model that can handle each role.
-- **Blast-radius analysis & reviews:** standard-to-capable model — these need judgment and broad reading.
-- **Mechanical implementation** (1-2 files, complete spec): fast, cheap model.
-- **Integration/judgment implementation** (multi-file, pattern matching, debugging): standard model.
-- **Architecture/design tasks:** most capable model.
+Judgment roles stay on the capable model; mechanical execution and checklist verification go to the fast model:
+
+| Role | Model |
+|------|-------|
+| Controller (this session) | Opus 4.8 |
+| Pre-flight blast-radius analyst | Opus 4.8 |
+| Per-task analyst (when the tier table dispatches one) | Opus 4.8 |
+| Implementer — mechanical (1-2 files, complete spec in task) | Haiku 4.5 |
+| Implementer — integration/judgment (multi-file, pattern matching, debugging) | Opus 4.8 |
+| Spec reviewer / combined reviewer (additive) | Haiku 4.5 |
+| Code quality reviewer (modifying, interface-changing) | Opus 4.8 |
+
+A Haiku subagent reporting BLOCKED for reasoning depth → re-dispatch on Opus (see Handling Implementer Status). Substitute the current-generation equivalents if these models age out.
 
 ## Handling Implementer Status
 
@@ -95,7 +113,8 @@ Use the least powerful model that can handle each role.
 - Start implementation on main/master without explicit user consent
 - Skip the pre-flight blast radius or a per-task compat check
 - Proceed past a cascade gap without updating the plan
-- Skip either review (spec compliance OR code quality), or run quality before spec is ✅
+- Skip the reviews the task's tier requires (two-stage for modifying/interface-changing; combined for additive), or run quality before spec is ✅
+- Use the additive shortcut on a task that modifies existing behavior (TIER-MISMATCH from the combined reviewer → re-run through the full flow)
 - Dispatch multiple implementer subagents in parallel (conflicts)
 - Make a subagent read the plan file (paste full text instead)
 - Treat a green new test with a broken must-stay-green test as progress — it's a regression; route to `pressurecooker:systematic-debugging`, never patch the symptom or loosen the test
@@ -114,4 +133,5 @@ Use the least powerful model that can handle each role.
 - `./implementer-prompt.md` — implementer subagent (TDD + regression)
 - `./spec-reviewer-prompt.md` — spec compliance reviewer
 - `./code-quality-reviewer-prompt.md` — code quality + regression reviewer
+- `./combined-reviewer-prompt.md` — single-dispatch spec+quality reviewer for additive-tier tasks
 ```
