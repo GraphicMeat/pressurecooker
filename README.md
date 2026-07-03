@@ -57,6 +57,12 @@ Standalone skills support the chain:
 
 The SessionStart hook injects the skill routing map every session, so the right skill fires without being remembered, and reports codebase-map staleness.
 
+## Project memory & fable mode
+
+Each target project gets a committed memory store at `docs/pressurecooker/memory/` — one fact per file (`type: map | retro | convention`), indexed by a `MEMORY.md` the SessionStart hook injects. The chain reads and writes it: worktree setup records the test command, pre-flight blast radius warms from the consumer map, brainstorming records conventions, and finishing writes a `retro` after every branch (review catches, missed cascades, regression causes) that the next plan's self-review must consult — the learning loop. Memory is an accelerator, never a dependency: missing index means today's behavior.
+
+Execution is risk-tiered: each plan task carries a `Risk:` tier (additive / modifying / interface-changing) that scales per-task ceremony — additive tasks run 2 subagents (implementer + combined reviewer) instead of 4 — and roles route to explicit models (judgment on Opus, mechanical on Haiku). Tiers relax ceremony only; must-stay-green rules never relax.
+
 ## Dependencies
 
 Requires the [`caveman`](https://github.com/JuliusBrussee/caveman) plugin. Declared

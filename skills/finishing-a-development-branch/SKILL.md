@@ -39,7 +39,15 @@ Cannot proceed with merge/PR until tests pass.
 
 Stop. Don't proceed to Step 2. **REQUIRED SUB-SKILL:** Use `pressurecooker:systematic-debugging` to find the root cause — never loosen, skip, or patch tests to get the gate green.
 
-**If tests pass:** Continue to Step 2.
+**If tests pass:** Write the retro memory (below), then continue to Step 2.
+
+### Step 1b: Retro Memory (the learning loop)
+
+Write one `retro` memory to `docs/pressurecooker/memory/` capturing what this branch taught: what the reviews caught, cascade gaps found at execution time that the plan missed, regressions hit and their root causes. Frontmatter `name`/`description`/`type: retro`, normal prose, no secret values. Update an existing recurring retro instead of duplicating; add/refresh its one-line entry in `MEMORY.md`. If the index exceeds ~30 lines, consolidate (merge near-duplicates, delete stale entries) before adding.
+
+Nothing notable happened (clean additive branch, no review catches, no gaps)? Skip silently — no empty retros.
+
+These retros are read by `pressurecooker:writing-plans` — a recorded miss becomes a checklist item the next plan must not repeat.
 
 ### Step 2: Detect Environment
 
