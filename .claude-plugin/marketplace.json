@@ -1,0 +1,13 @@
+{
+  "name": "pressurecooker",
+  "owner": {
+    "name": "GraphicMeat"
+  },
+  "plugins": [
+    {
+      "name": "pressurecooker",
+      "source": "./",
+      "description": "An agentic skills framework & software development methodology that works under pressure."
+    }
+  ]
+}

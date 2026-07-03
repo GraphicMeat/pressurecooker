@@ -1,0 +1,20 @@
+{
+  "name": "pressurecooker",
+  "version": "0.1.0",
+  "description": "An agentic skills framework & software development methodology that works under pressure.",
+  "author": {
+    "name": "GraphicMeat"
+  },
+  "license": "MIT",
+  "keywords": [
+    "agentic",
+    "skills",
+    "methodology",
+    "workflow"
+  ],
+  "dependencies": [
+    "caveman"
+  ],
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json"
+}
