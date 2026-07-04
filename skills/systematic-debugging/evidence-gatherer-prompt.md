@@ -67,5 +67,6 @@ Task tool (general-purpose):
 
     Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
     Technical terms, file:line refs, numbers, and quoted errors stay EXACT (never
-    paraphrase error text).
+    paraphrase error text). NO code echoes — evidence is file:line + the exact error,
+    not pasted source.
 ```

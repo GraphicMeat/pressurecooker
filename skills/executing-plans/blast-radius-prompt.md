@@ -68,7 +68,8 @@ Task tool (general-purpose):
     - **Recommendation:** SAFE TO PROCEED / PLAN NEEDS UPDATE (with specifics)
 
     Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
-    Technical terms, file:line refs, numbers, and quoted errors stay EXACT.
+    Technical terms, file:line refs, numbers, and quoted errors stay EXACT. NO code
+    echoes — reference file:line instead.
 ```
 
 ## Per-task mode (Step 2a — before each implementer)
@@ -117,5 +118,6 @@ Task tool (general-purpose):
     - **Must-stay-green for this task:** [tests that must still pass after it]
 
     Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
-    Technical terms, file:line refs, numbers, and quoted errors stay EXACT.
+    Technical terms, file:line refs, numbers, and quoted errors stay EXACT. NO code
+    echoes — reference file:line instead.
 ```

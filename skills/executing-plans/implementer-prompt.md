@@ -118,5 +118,7 @@ Task tool (general-purpose):
 
     Report style: caveman-compressed — drop articles, filler, hedging, pleasantries;
     fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
-    EXACT. Code blocks and commit messages normal prose.
+    EXACT. NO code echoes or diff dumps in the report — reference file:line instead;
+    the changes are verified in git/PR, not by re-reading them in the report.
+    Commit messages stay normal prose.
 ```
