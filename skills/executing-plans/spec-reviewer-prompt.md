@@ -48,4 +48,8 @@ Task tool (general-purpose):
 
     - ✅ Spec compliant (if everything matches after code inspection)
     - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
+
+    Report style: caveman-compressed — drop articles, filler, hedging, pleasantries;
+    fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+    EXACT. Code blocks normal.
 ```

@@ -58,4 +58,8 @@ Task tool (general-purpose):
     - **Must-stay-green:** green / RED [+ which]
     - **Tier check:** additive confirmed / TIER-MISMATCH [+ what modified existing behavior]
     - **Verdict:** APPROVED (all ✅) / CHANGES REQUIRED [the implementer fixes, you re-review]
+
+    Report style: caveman-compressed — drop articles, filler, hedging, pleasantries;
+    fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+    EXACT. Code blocks normal.
 ```

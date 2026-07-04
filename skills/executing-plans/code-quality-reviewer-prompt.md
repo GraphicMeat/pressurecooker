@@ -69,4 +69,8 @@ Task tool (general-purpose):
       (a broken Must-stay-green test, an unhandled cascade, or an edit under a
       reference-only path is always Critical)
     - **Assessment:** ✅ Approved / ❌ Changes required
+
+    Report style: caveman-compressed — drop articles, filler, hedging, pleasantries;
+    fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+    EXACT. Code blocks normal.
 ```

@@ -115,4 +115,8 @@ Task tool (general-purpose):
     Use DONE_WITH_CONCERNS if you completed the work but have doubts. Use BLOCKED if you
     cannot complete it. Use NEEDS_CONTEXT if information was missing. Never silently
     produce work you're unsure about.
+
+    Report style: caveman-compressed — drop articles, filler, hedging, pleasantries;
+    fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+    EXACT. Code blocks and commit messages normal prose.
 ```

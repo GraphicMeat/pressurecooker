@@ -66,6 +66,9 @@ Task tool (general-purpose):
     - **Cascade gaps:** required changes NOT in the plan (file:line + what must change), or "none"
     - **Expanded must-stay-green:** existing tests the plan missed, or "plan set is complete"
     - **Recommendation:** SAFE TO PROCEED / PLAN NEEDS UPDATE (with specifics)
+
+    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
+    Technical terms, file:line refs, numbers, and quoted errors stay EXACT.
 ```
 
 ## Per-task mode (Step 2a — before each implementer)
@@ -112,4 +115,7 @@ Task tool (general-purpose):
     - **Works with existing:** yes / no (+ what the implementer must also handle)
     - **Cascade beyond task scope:** none / [list file:line + what changes]
     - **Must-stay-green for this task:** [tests that must still pass after it]
+
+    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
+    Technical terms, file:line refs, numbers, and quoted errors stay EXACT.
 ```

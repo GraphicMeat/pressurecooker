@@ -64,4 +64,8 @@ Task tool (general-purpose):
     - **Suggested minimal experiment:** the smallest test/instrumentation that would
       confirm or kill the hypothesis (for the controller to run via an implementer)
     - **Confidence:** high / medium / low
+
+    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
+    Technical terms, file:line refs, numbers, and quoted errors stay EXACT (never
+    paraphrase error text).
 ```
