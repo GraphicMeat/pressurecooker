@@ -94,11 +94,10 @@ Run these in an interactive `claude` terminal.
 /plugin install pressurecooker@pressurecooker
 ```
 
-Then install the required dependency and remove the standalone silent-dev plugin if present (its skill name collides with this plugin's):
+Then install the required dependency:
 
 ```
 /plugin install caveman@caveman
-/plugin uninstall silent-dev
 ```
 
 The `pressurecooker-map` MCP server needs `node` on your PATH. Reload the session after install so the SessionStart hook loads.
