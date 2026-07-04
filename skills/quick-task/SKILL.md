@@ -21,7 +21,7 @@ The full chain (brainstorm → plan → worktree → execute) is overkill for a 
 ## The Floor (never waived)
 
 1. **Split unrelated changes.** A cosmetic fix and a behavior fix requested together are two tasks with two risk profiles — never one commit. "While you're in there" is a second task.
-2. **Behavior changes get a failing test first.** Cosmetic-only changes (copy, styling) may skip the new test but still run the affected suite. If the bug deserves fixing, it deserves the regression test that keeps it fixed.
+2. **Behavior changes get a failing test first** (`pressurecooker:test-driven-development`). Cosmetic-only changes (copy, styling) may skip the new test but still run the affected suite. If the bug deserves fixing, it deserves the regression test that keeps it fixed.
 3. **Check consumers before editing shared code.** One grep: who else calls this? A shared helper's "obvious 2-second fix" changes behavior for every caller — read the call sites first.
 4. **Run the affected tests + touched-area suite.** Green before commit. Update snapshots/i18n only with eyes on the diff.
 5. **Verify before claiming done** — `pressurecooker:verification-before-completion`: fresh command output, then the claim.

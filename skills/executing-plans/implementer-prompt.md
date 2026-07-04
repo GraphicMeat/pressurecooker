@@ -47,7 +47,8 @@ Task tool (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies — TDD: failing test first, then minimal code
+    1. Implement exactly what the task specifies — TDD per pressurecooker:test-driven-development:
+       failing test first (watch it fail for the right reason), then minimal code
     2. Run the new test(s) to green
     3. **Run the Must-stay-green tests (Step 4b regression check).** If any go red, fix
        before proceeding — a passing new test with a broken existing test is a failure.

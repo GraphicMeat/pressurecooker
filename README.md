@@ -25,6 +25,7 @@ Inspired by the [superpowers](https://github.com/obra/superpowers) plugin.
 │   ├── quick-task/         # small-fix path with escalation triggers
 │   ├── secure-data-handling/
 │   ├── verification-before-completion/
+│   ├── test-driven-development/  # + testing anti-patterns reference
 │   └── silent-dev/         # minimal-narration output discipline
 └── hooks/                  # Event hooks
     ├── hooks.json
@@ -54,6 +55,7 @@ Standalone skills support the chain:
 - **secure-data-handling** — secrets and secure data never surface: fingerprint-don't-print diagnostics, env/secret-manager storage patterns, `Secure-data fields:` propagation through spec → plan → subagents → reviews
 - **verification-before-completion** — no done/fixed/passing claims without fresh command output; controllers independently verify subagent claims via the diff
 - **silent-dev** — minimal-narration output discipline for coding sessions; artifacts, commits, and security warnings stay normal prose
+- **test-driven-development** — the RED-GREEN-REFACTOR discipline every implementer runs: failing test first, minimal code, Step 4b regression check; characterization tests (refactors) explicitly distinguished
 
 The SessionStart hook injects the skill routing map every session, so the right skill fires without being remembered, and reports codebase-map staleness.
 

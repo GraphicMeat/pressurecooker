@@ -53,6 +53,7 @@ PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE a
 - Executing a written plan -> pressurecooker:using-git-worktrees then pressurecooker:executing-plans (always subagent-driven)
 - ANY bug, test failure, regression, or unexpected behavior -> pressurecooker:systematic-debugging BEFORE proposing fixes (root cause, never symptom patches)
 - Small clear fix not worth the full chain -> pressurecooker:quick-task (still test-first; escalates when scope grows)
+- Writing ANY implementation code -> pressurecooker:test-driven-development (failing test first, no exceptions)
 - Code touching credentials, tokens, PII, payment or other secure data -> pressurecooker:secure-data-handling (secrets never surface in logs, output, commits, artifacts)
 - About to claim done/fixed/passing, or commit/PR -> pressurecooker:verification-before-completion (evidence before claims)
 - All tasks done, integrating work -> pressurecooker:finishing-a-development-branch
