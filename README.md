@@ -27,9 +27,12 @@ Inspired by the [superpowers](https://github.com/obra/superpowers) plugin.
 │   ├── verification-before-completion/
 │   ├── test-driven-development/  # + testing anti-patterns reference
 │   └── silent-dev/         # minimal-narration output discipline
-└── hooks/                  # Event hooks
-    ├── hooks.json
-    └── session-start.sh    # dep check + skill routing map + map staleness
+├── hooks/                  # Event hooks
+│   ├── hooks.json
+│   └── session-start.sh    # dep check + skill routing map + map staleness + memory index
+├── mcp/
+│   └── map-server.mjs      # zero-dep MCP server exposing the codebase map as tools
+└── .mcp.json               # registers the pressurecooker-map server
 ```
 
 ## Workflow
@@ -64,6 +67,8 @@ The SessionStart hook injects the skill routing map every session, so the right 
 Each target project gets a committed memory store at `docs/pressurecooker/memory/` — one fact per file (`type: map | retro | convention`), indexed by a `MEMORY.md` the SessionStart hook injects. The chain reads and writes it: worktree setup records the test command, pre-flight blast radius warms from the consumer map, brainstorming records conventions, and finishing writes a `retro` after every branch (review catches, missed cascades, regression causes) that the next plan's self-review must consult — the learning loop. Memory is an accelerator, never a dependency: missing index means today's behavior.
 
 Execution is risk-tiered: each plan task carries a `Risk:` tier (additive / modifying / interface-changing) that scales per-task ceremony — additive tasks run 2 subagents (implementer + combined reviewer) instead of 4 — and roles route to explicit models (judgment on Opus, mechanical on Haiku). Tiers relax ceremony only; must-stay-green rules never relax.
+
+The plugin also ships the `pressurecooker-map` MCP server (`map_overview`, `map_section`, `consumers_of`, `map_staleness`) — agents query the codebase map instead of re-reading MAP.md — and a CI template (`skills/finishing-a-development-branch/ci-template.yml`) that finishing offers to projects without CI: full suite server-side plus map staleness/duplication drift warnings.
 
 ## Dependencies
 

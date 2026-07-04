@@ -137,3 +137,5 @@ Each entry is a ready `pressurecooker:writing-plans` input — executed under it
 - **pressurecooker:finishing-a-development-branch** — post-merge delta update keeps the map alive
 
 **Scripts (this directory):** `./scan-duplication.sh`, `./scan-callgraph.sh` — read-only, always exit 0, print fallback instructions when tooling is missing.
+
+**MCP server:** the plugin ships `pressurecooker-map` (tools `map_overview`, `map_section`, `consumers_of`, `map_staleness`) serving this skill's MAP.md to agents and subagents — query it instead of re-reading the file; answers are hints, verify against current code.

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pressurecooker-map": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/map-server.mjs"]
+    }
+  }
+}

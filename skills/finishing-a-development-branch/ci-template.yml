@@ -1,0 +1,56 @@
+# pressureCooker CI template — copy to .github/workflows/pressurecooker-ci.yml
+# in the target project and fill the two TODO commands.
+#
+# Two jobs:
+#   test  — the branch-level regression gate, server-side: the same full suite
+#           finishing-a-development-branch runs locally.
+#   map-drift — keeps the committed codebase map honest: fails when duplication
+#           has drifted significantly past what the map records, or when the map
+#           is stale beyond the threshold. Advisory by default (continue-on-error).
+
+name: pressurecooker-ci
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: project setup — pick what applies, delete the rest
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: 20, cache: npm }
+      # - run: npm ci
+      # - uses: actions/setup-python@v5
+      #   with: { python-version: "3.12" }
+      # - run: pip install -r requirements.txt
+      - name: Full test suite (regression gate)
+        run: |
+          echo "TODO: replace with the project's full suite — npm test / pytest / cargo test / go test ./..."
+          exit 1
+
+  map-drift:
+    runs-on: ubuntu-latest
+    continue-on-error: true # advisory — flip to false to make drift blocking
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for staleness count
+      - name: Map staleness
+        run: |
+          MAP=docs/pressurecooker/codebase-map/MAP.md
+          if [ ! -f "$MAP" ]; then echo "no map — skipping"; exit 0; fi
+          HASH=$(grep -m1 '^analyzed-at:' "$MAP" | awk '{print $2}')
+          BEHIND=$(git rev-list --count "$HASH"..HEAD 2>/dev/null || echo "unknown")
+          echo "map analyzed-at $HASH — $BEHIND commits behind"
+          [ "$BEHIND" != "unknown" ] && [ "$BEHIND" -gt 30 ] && { echo "::warning::codebase map stale ($BEHIND commits) — run pressurecooker:analyzing-codebase"; exit 1; } || true
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Duplication drift
+        run: |
+          # TODO: point at your source dir
+          npx --yes jscpd src --min-tokens 50 --reporters consoleFull --threshold 5 \
+            --ignore "**/node_modules/**,**/dist/**,**/build/**,**/vendor/**" || \
+            echo "::warning::duplication above threshold — compare against the map's Duplication Report"

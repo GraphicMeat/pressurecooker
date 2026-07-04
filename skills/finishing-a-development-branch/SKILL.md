@@ -49,6 +49,10 @@ Nothing notable happened (clean additive branch, no review catches, no gaps)? Sk
 
 These retros are read by `pressurecooker:writing-plans` — a recorded miss becomes a checklist item the next plan must not repeat.
 
+### Step 1c: CI Offer (once per project)
+
+If the project has no CI config (`.github/workflows/`, `.gitlab-ci.yml`, etc.), offer once: "No CI detected — want the pressureCooker CI template? It runs the full suite server-side and warns when the codebase map drifts." On yes: copy `./ci-template.yml` (this skill's directory) to `.github/workflows/pressurecooker-ci.yml`, fill the TODO setup/test commands from the map memory's recorded test command, commit. On no: don't ask again (note the decline in a `convention` memory).
+
 ### Step 2: Detect Environment
 
 **Determine workspace state before presenting options:**
