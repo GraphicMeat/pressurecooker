@@ -76,14 +76,32 @@ Requires the [`caveman`](https://github.com/JuliusBrussee/caveman) plugin. Decla
 in `plugin.json` (`dependencies`) and re-checked by the SessionStart hook, which
 warns if caveman is not installed.
 
-## Install (local dev)
+## Install
 
-Add this repo as a marketplace, then install the plugin:
+Run these in an interactive `claude` terminal.
+
+**From GitHub (recommended):**
 
 ```
-/plugin marketplace add /Users/Rokas/Repos/pressureCooker
+/plugin marketplace add GraphicMeat/pressurecooker
 /plugin install pressurecooker@pressurecooker
 ```
+
+**From a local clone** (point at the repo directory — no trailing slash, no leading `~`; a bare local path can be misread as an option, so use the full path or `.` from inside the repo):
+
+```
+/plugin marketplace add .
+/plugin install pressurecooker@pressurecooker
+```
+
+Then install the required dependency and remove the standalone silent-dev plugin if present (its skill name collides with this plugin's):
+
+```
+/plugin install caveman@caveman
+/plugin uninstall silent-dev
+```
+
+The `pressurecooker-map` MCP server needs `node` on your PATH. Reload the session after install so the SessionStart hook loads.
 
 ## License
 
