@@ -94,10 +94,10 @@ Run these in an interactive `claude` terminal.
 /plugin install pressurecooker@pressurecooker
 ```
 
-Then install the required dependency:
+Then install the required dependency (served from this same marketplace):
 
 ```
-/plugin install caveman@caveman
+/plugin install caveman@pressurecooker
 ```
 
 The `pressurecooker-map` MCP server needs `node` on your PATH. Reload the session after install so the SessionStart hook loads.

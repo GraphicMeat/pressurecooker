@@ -8,6 +8,14 @@
       "name": "pressurecooker",
       "source": "./",
       "description": "An agentic skills framework & software development methodology that works under pressure."
+    },
+    {
+      "name": "caveman",
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      },
+      "description": "Ultra-compressed communication mode — required dependency of pressurecooker."
     }
   ]
 }
