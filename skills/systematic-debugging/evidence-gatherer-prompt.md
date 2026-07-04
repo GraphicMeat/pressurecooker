@@ -65,8 +65,14 @@ Task tool (general-purpose):
       confirm or kill the hypothesis (for the controller to run via an implementer)
     - **Confidence:** high / medium / low
 
-    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
-    Technical terms, file:line refs, numbers, and quoted errors stay EXACT (never
-    paraphrase error text). NO code echoes — evidence is file:line + the exact error,
-    not pasted source.
+    Output discipline (MANDATORY):
+    - Work SILENT. NO text between tool calls — no preamble, no plan announcements,
+      no progress narration, no findings-as-you-go. Only text you may emit: blocking
+      questions before starting (if any), then the single final report.
+    - Final report: caveman-compressed — drop articles, filler, hedging, pleasantries;
+      fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+      EXACT (never paraphrase error text). NO code echoes — evidence is file:line +
+      the exact error, not pasted source.
+    - Shortest report that carries every required field; one line per finding.
+    - Code, comments, commit messages: normal prose, never caveman.
 ```

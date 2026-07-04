@@ -49,6 +49,7 @@ Write normally for:
 
 - **caveman** compresses what you say; **silent-dev** cuts what you say at all. They compose: what little you emit is caveman-terse (unless a boundary above applies).
 - Chain skills' "Announce at start" lines → bracket tags under silent-dev.
+- **Subagents inherit neither** — hooks and skills don't reach them. Discipline reaches subagents only through the mandatory "Output discipline" dispatch footer (injected by the session-start routing rule and embedded in every prompt template). Never dispatch without it.
 
 ## Example
 

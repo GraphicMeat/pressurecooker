@@ -58,6 +58,21 @@ PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE a
 - About to claim done/fixed/passing, or commit/PR -> pressurecooker:verification-before-completion (evidence before claims)
 - All tasks done, integrating work -> pressurecooker:finishing-a-development-branch
 - Coding sessions default to pressurecooker:silent-dev output discipline (minimal narration; artifacts stay normal prose)
+
+SUBAGENT OUTPUT DISCIPLINE — MANDATORY. Subagents inherit NO hooks or skills; this rule is their only exposure. EVERY subagent prompt you dispatch — skill templates, Explore, reviewers, quick fixes, freeform Agent/Task calls, ALL of them — MUST end with this block VERBATIM:
+
+  Output discipline (MANDATORY):
+  - Work SILENT. NO text between tool calls — no preamble, no plan announcements,
+    no progress narration, no findings-as-you-go. Only text you may emit: blocking
+    questions before starting (if any), then the single final report.
+  - Final report: caveman-compressed — drop articles, filler, hedging, pleasantries;
+    fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+    EXACT. NO code echoes or diff dumps — reference file:line instead; changes are
+    verified in git/PR, not in the report.
+  - Shortest report that carries every required field; one line per finding.
+  - Code, comments, commit messages: normal prose, never caveman.
+
+Skill prompt templates already embed this block — keep it when adapting them. Dispatching a subagent without it is a routing violation.
 EOF
 )
 

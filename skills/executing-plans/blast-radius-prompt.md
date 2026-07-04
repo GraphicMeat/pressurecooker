@@ -67,9 +67,16 @@ Task tool (general-purpose):
     - **Expanded must-stay-green:** existing tests the plan missed, or "plan set is complete"
     - **Recommendation:** SAFE TO PROCEED / PLAN NEEDS UPDATE (with specifics)
 
-    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
-    Technical terms, file:line refs, numbers, and quoted errors stay EXACT. NO code
-    echoes — reference file:line instead.
+    Output discipline (MANDATORY):
+    - Work SILENT. NO text between tool calls — no preamble, no plan announcements,
+      no progress narration, no findings-as-you-go. Only text you may emit: blocking
+      questions before starting (if any), then the single final report.
+    - Final report: caveman-compressed — drop articles, filler, hedging, pleasantries;
+      fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+      EXACT. NO code echoes or diff dumps — reference file:line instead; changes are
+      verified in git/PR, not in the report.
+    - Shortest report that carries every required field; one line per finding.
+    - Code, comments, commit messages: normal prose, never caveman.
 ```
 
 ## Per-task mode (Step 2a — before each implementer)
@@ -117,7 +124,14 @@ Task tool (general-purpose):
     - **Cascade beyond task scope:** none / [list file:line + what changes]
     - **Must-stay-green for this task:** [tests that must still pass after it]
 
-    Report style: caveman-compressed — drop articles, filler, hedging; fragments fine.
-    Technical terms, file:line refs, numbers, and quoted errors stay EXACT. NO code
-    echoes — reference file:line instead.
+    Output discipline (MANDATORY):
+    - Work SILENT. NO text between tool calls — no preamble, no plan announcements,
+      no progress narration, no findings-as-you-go. Only text you may emit: blocking
+      questions before starting (if any), then the single final report.
+    - Final report: caveman-compressed — drop articles, filler, hedging, pleasantries;
+      fragments fine. Technical terms, file:line refs, numbers, and quoted errors stay
+      EXACT. NO code echoes or diff dumps — reference file:line instead; changes are
+      verified in git/PR, not in the report.
+    - Shortest report that carries every required field; one line per finding.
+    - Code, comments, commit messages: normal prose, never caveman.
 ```
