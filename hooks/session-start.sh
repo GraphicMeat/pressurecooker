@@ -43,6 +43,12 @@ PROJECT MEMORY INDEX (docs/pressurecooker/memory/ — read individual memory fil
 $(cat "$memory_index")"
 fi
 
+# --- economy mode (inline-first execution to save tokens) ---
+economy_line="ECONOMY MODE: off — subagent-driven default; inline execution needs a declared deviation or a plan Execution stamp."
+if [ "${PRESSURECOOKER_ECONOMY:-0}" = "1" ] || [ -f "${project_dir}/docs/pressurecooker/ECONOMY" ]; then
+  economy_line="ECONOMY MODE: ON — inline-first execution. Run investigations and eligible tasks inline per the executing-plans Inline Execution table and systematic-debugging context rules; dispatch subagents only for wide exploration, interface-changing work, and the reviews the tier table mandates. Must-stay-green, TDD, and review requirements never relax."
+fi
+
 # --- skill routing map (the dispatcher) ---
 routing=$(cat <<'EOF'
 PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE acting:
@@ -50,7 +56,7 @@ PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE a
 - Big feature, unfamiliar codebase, or stale/missing map -> pressurecooker:analyzing-codebase
 - Any creative work (feature, component, behavior change) -> pressurecooker:brainstorming (hard gate: design approval before implementation)
 - Approved spec/requirements, multi-step work -> pressurecooker:writing-plans (refactors follow its Refactoring Plans rules: characterization tests first, one module per task)
-- Executing a written plan -> pressurecooker:using-git-worktrees then pressurecooker:executing-plans (always subagent-driven)
+- Executing a written plan -> pressurecooker:using-git-worktrees then pressurecooker:executing-plans (subagent-driven by default; inline economy tier per its criteria)
 - ANY bug, test failure, regression, or unexpected behavior -> pressurecooker:systematic-debugging BEFORE proposing fixes (root cause, never symptom patches)
 - Small clear fix not worth the full chain -> pressurecooker:quick-task (still test-first; escalates when scope grows)
 - Writing ANY implementation code -> pressurecooker:test-driven-development (failing test first, no exceptions)
@@ -83,7 +89,7 @@ Skill prompt templates already embed this block and name the agent type — keep
 EOF
 )
 
-ctx="pressurecooker plugin loaded. ${dep_line} ${map_line}${memory_block}
+ctx="pressurecooker plugin loaded. ${dep_line} ${map_line} ${economy_line}${memory_block}
 
 ${routing}"
 

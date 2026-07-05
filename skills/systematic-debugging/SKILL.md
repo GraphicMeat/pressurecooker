@@ -51,7 +51,7 @@ Complete each phase before the next.
 
 **Context rules:**
 - **Reference-only paths are evidence, never fix targets.** If the bug only reproduces inside a sample/reference folder (Global Constraints), observe it there but never edit it.
-- **Inside executing-plans:** the controller never debugs by editing. Dispatch a read-only investigator subagent (`./evidence-gatherer-prompt.md`) to do Phase 1–2 and report; fixes go through an implementer subagent as usual.
+- **Inside executing-plans:** the controller never debugs by editing. Phase 1–2 may run inline when the evidence is cheap — the suspect files are already in the controller's context, or the trace clearly spans ≤3 known files. Unknown scope or a broad sweep → dispatch the read-only investigator (`./evidence-gatherer-prompt.md`) instead; exploration done inline stays in controller context for the rest of the session and re-costs every turn, so a subagent is the cheaper path for wide hunts. Fixes go through an implementer subagent (or the executing-plans Inline Execution tier when its criteria hold).
 
 **Architecture-Confusion Check (run before leaving Phase 1):**
 

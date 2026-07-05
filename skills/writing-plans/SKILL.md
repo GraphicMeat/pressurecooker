@@ -134,6 +134,11 @@ draw from this.]
   contract changes; interface-changing = changes a public interface, schema,
   serialized format, or any contract with consumers outside this task's
   files. In doubt between tiers → pick the higher one.]
+- Execution: [inline | subagent — derived mechanically from Risk: additive
+  AND ≤2 files AND the task text is a complete spec → inline; everything
+  else → subagent. Executing-plans honors this stamp; its Inline Execution
+  rules still apply (reviews per tier, must-stay-green never relaxes).
+  In doubt → subagent.]
 ```
 
 Then the TDD step cycle:
@@ -200,13 +205,13 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 3. **Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 4. **Regression coverage:** Does every task that touches existing code name the existing tests that must stay green (Must-stay-green), and does its cycle include the Step 4b regression check?
 5. **Fit check:** Is each change consistent with existing patterns and how the surrounding feature already behaves (industry norms where they apply)? A change that technically works but breaks the feature's expected behavior is a defect.
-6. **Memory & risk check:** Did you consult `retro` memories, and does any task repeat a recorded past miss? Does every task's Impact block carry a `Risk:` tier?
+6. **Memory & risk check:** Did you consult `retro` memories, and does any task repeat a recorded past miss? Does every task's Impact block carry a `Risk:` tier and an `Execution:` stamp?
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
 ## Execution Handoff
 
-After saving the plan, hand off to execution. There is one execution path — all development is subagent-driven.
+After saving the plan, hand off to execution. There is one execution path — subagent-driven by default, with per-task `Execution: inline` stamps honored under the executing-plans Inline Execution rules.
 
 > "Plan complete and saved to `docs/pressurecooker/plans/<filename>.md`. I'll execute it with executing-plans: pre-flight blast-radius analysis, then a fresh subagent per task with per-task compatibility checks and two-stage review."
 

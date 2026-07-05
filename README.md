@@ -49,7 +49,7 @@ brainstorming → writing-plans → using-git-worktrees → executing-plans → 
 - **brainstorming** — idea → approved design spec (TDD/KISS, industry research for user-facing features)
 - **writing-plans** — spec → task-by-task plan with blast-radius / impact analysis
 - **using-git-worktrees** — isolated workspace + clean baseline (the regression reference)
-- **executing-plans** — always subagent-driven: pre-flight + per-task blast radius, implementer + two-stage review per task
+- **executing-plans** — subagent-driven by default: pre-flight + per-task blast radius, implementer + two-stage review per task; criteria-gated inline economy tier for small additive/warm-context tasks
 - **finishing-a-development-branch** — verify, then merge / PR / keep / discard
 
 Standalone skills support the chain:
@@ -71,7 +71,9 @@ All chain dispatches run on the plugin's own agent types — `pressurecooker:imp
 
 Each target project gets a committed memory store at `docs/pressurecooker/memory/` — one fact per file (`type: map | retro | convention`), indexed by a `MEMORY.md` the SessionStart hook injects. The chain reads and writes it: worktree setup records the test command, pre-flight blast radius warms from the consumer map, brainstorming records conventions, and finishing writes a `retro` after every branch (review catches, missed cascades, regression causes) that the next plan's self-review must consult — the learning loop. Memory is an accelerator, never a dependency: missing index means today's behavior.
 
-Execution is risk-tiered: each plan task carries a `Risk:` tier (additive / modifying / interface-changing) that scales per-task ceremony — additive tasks run 2 subagents (implementer + combined reviewer) instead of 4 — and roles route to explicit models (judgment on Opus, mechanical on Haiku). Tiers relax ceremony only; must-stay-green rules never relax.
+Execution is risk-tiered: each plan task carries a `Risk:` tier (additive / modifying / interface-changing) that scales per-task ceremony — additive tasks run 2 subagents (implementer + combined reviewer) instead of 4 — and roles route to explicit models (judgment on Opus, mechanical on Haiku; the investigator agent defaults to Sonnet). Tiers relax ceremony only; must-stay-green rules never relax.
+
+Token economy is built in: plans stamp each task `Execution: inline | subagent` (additive + ≤2 files + complete spec → inline-eligible), the controller may implement eligible tasks inline under the executing-plans Inline Execution rules (reviews per tier still dispatch; fresh-eyes review never relaxes for modifying work), and debugging Phase 1–2 runs inline when the suspect files are already in context. Economy mode (`PRESSURECOOKER_ECONOMY=1` or a `docs/pressurecooker/ECONOMY` flag file) makes inline-first the session default; the guiding heuristic either way: inline for small warm-context work, subagents for anything that would flood controller context — wide exploration inline is re-paid every turn after.
 
 The plugin also ships the `pressurecooker-map` MCP server (`map_overview`, `map_section`, `consumers_of`, `map_staleness`) — agents query the codebase map instead of re-reading MAP.md — and a CI template (`skills/finishing-a-development-branch/ci-template.yml`) that finishing offers to projects without CI: full suite server-side plus map staleness/duplication drift warnings.
 

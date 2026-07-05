@@ -1,18 +1,18 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute - always subagent-driven, with pre-flight and per-task blast-radius analysis
+description: Use when you have a written implementation plan to execute - subagent-driven by default with a criteria-gated inline economy tier, plus pre-flight and per-task blast-radius analysis
 ---
 
 # Executing Plans
 
 ## Overview
 
-Execute an implementation plan. **All development is subagent-driven, always.** The controller (you) never edits code directly — it loads the plan, analyzes blast radius, dispatches fresh subagents per task, reviews between them, and reports when complete.
+Execute an implementation plan. **Development is subagent-driven by default.** The controller (you) loads the plan, analyzes blast radius, dispatches fresh subagents per task, reviews between them, and reports when complete. A task may run **inline** (controller implements directly) only when it meets the Inline Execution criteria below — never by convenience.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan (subagent-driven)."
 
 **Core principles:**
-- **Controller coordinates, subagents implement.** Never write implementation code yourself — dispatch a subagent. This keeps your context clean for coordination and gives each task isolated, precisely-scoped context.
+- **Controller coordinates, subagents implement (default).** Dispatching keeps your context clean for coordination and gives each task isolated, precisely-scoped context. Inline execution trades that isolation for token economy — allowed only inside the criteria below, because inline work lives in your context for the rest of the session and every later turn re-pays it.
 - **Fresh subagent per task.** Subagents never inherit your session history — you construct exactly the context they need.
 - **Two-tier blast radius.** A pre-flight analysis of the whole change surface once, plus a per-task compatibility check before each implementer runs.
 - **Continuous execution.** Do not pause to check in between tasks. The only reasons to stop: an unresolvable BLOCKED status, a cascade gap the plan doesn't cover, or all tasks done.
@@ -45,7 +45,7 @@ Output: a confirmed/expanded must-stay-green set, and a list of **cascade gaps**
 
 ## Step 2: Per-Task Loop
 
-For each task, in order. Every box below is a fresh subagent — you only coordinate.
+For each task, in order. Every box below is a fresh subagent — you only coordinate — unless the task qualifies for the Inline Execution tier below.
 
 **Ceremony scales to the task's `Risk:` tier** (from its Impact block; task missing a tier → treat as interface-changing — resolve up). Tiers relax ceremony ONLY — must-stay-green rules, Step 4b, and reference-only/secure-data checks never relax:
 
@@ -65,6 +65,22 @@ For each task, in order. Every box below is a fresh subagent — you only coordi
 
 **e. Mark the task complete in TodoWrite.**
 
+## Inline Execution (economy tier)
+
+Inline = the controller implements the task itself instead of dispatching an implementer. It saves the dispatch cost (fresh context + file re-reads per subagent) but bloats controller context permanently — so it is criteria-gated, not a mood:
+
+| Tier | Inline allowed? | Review requirement |
+|------|-----------------|--------------------|
+| additive | yes, if ≤2 files AND the task text is a complete spec | combined reviewer dispatch as usual; for trivial tasks (docs/config/no behavior change) the controller may instead run the combined reviewer checklist inline against the actual diff |
+| modifying | only if every touched file was already read this session | spec + quality review dispatches stay MANDATORY — the controller reviewing its own inline work is the weakest check in the chain, so fresh eyes never relax here |
+| interface-changing | never | — |
+
+Rules that never relax inline: TDD (failing test first), the Step 4b must-stay-green run, reference-only paths, secure-data handling, and `pressurecooker:verification-before-completion` evidence. Inline changes commit per task exactly like an implementer would.
+
+**Choosing:** honor the task's `Execution:` stamp when the plan carries one (from `pressurecooker:writing-plans`). Without a stamp: economy mode ON (session-start reports it) → inline-first wherever the table allows; economy mode OFF → dispatch by default and go inline only with a one-line declared deviation ("running Task N inline: additive, 1 file, spec complete").
+
+**Token heuristic (both directions):** inline is cheaper for small tasks over files already in context; a subagent is cheaper for anything that would pull many new files into the controller — a broad exploration done inline is paid again on every subsequent turn.
+
 ## Step 3: Complete Development
 
 After all tasks pass both reviews:
@@ -79,14 +95,15 @@ Judgment roles stay on the capable model; mechanical execution and checklist ver
 | Role | Model |
 |------|-------|
 | Controller (this session) | Opus 4.8 |
-| Pre-flight blast-radius analyst | Opus 4.8 |
-| Per-task analyst (when the tier table dispatches one) | Opus 4.8 |
-| Implementer — mechanical (1-2 files, complete spec in task) | Haiku 4.5 |
+| Pre-flight blast-radius analyst | Opus 4.8 (dispatch with `model` override — investigator agent defaults to Sonnet) |
+| Per-task analyst (when the tier table dispatches one) | investigator default (Sonnet) |
+| Implementer — mechanical (1-2 files, complete spec in task) | Haiku 4.5 (`model` override on the dispatch) |
 | Implementer — integration/judgment (multi-file, pattern matching, debugging) | Opus 4.8 |
-| Spec reviewer / combined reviewer (additive) | Haiku 4.5 |
-| Code quality reviewer (modifying, interface-changing) | Opus 4.8 |
+| Spec reviewer / combined reviewer (additive) | Haiku 4.5 (`model` override) |
+| Code quality reviewer (modifying) | investigator default (Sonnet) |
+| Code quality reviewer (interface-changing) | Opus 4.8 (`model` override) |
 
-A Haiku subagent reporting BLOCKED for reasoning depth → re-dispatch on Opus (see Handling Implementer Status). Substitute the current-generation equivalents if these models age out.
+The `pressurecooker:investigator` agent carries `model: sonnet` in its definition — the cheap default for read-only work; the dispatch-time `model` parameter overrides it in either direction per this table. `pressurecooker:implementer` inherits the session model unless overridden. A cheap-model subagent reporting BLOCKED for reasoning depth → re-dispatch on Opus (see Handling Implementer Status). Substitute the current-generation equivalents if these models age out.
 
 ## Handling Implementer Status
 
@@ -109,7 +126,7 @@ A Haiku subagent reporting BLOCKED for reasoning depth → re-dispatch on Opus (
 ## Red Flags
 
 **Never:**
-- Implement in the controller — all development is subagent-driven, always
+- Implement in the controller outside the Inline Execution criteria — inline is a gated economy tier, not a convenience default
 - Start implementation on main/master without explicit user consent
 - Skip the pre-flight blast radius or a per-task compat check
 - Proceed past a cascade gap without updating the plan
