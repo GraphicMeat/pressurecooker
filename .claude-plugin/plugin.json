@@ -1,6 +1,6 @@
 {
   "name": "pressurecooker",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An agentic skills framework & software development methodology that works under pressure.",
   "author": {
     "name": "GraphicMeat"
@@ -16,6 +16,7 @@
     "caveman"
   ],
   "skills": "./skills",
+  "agents": "./agents",
   "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }

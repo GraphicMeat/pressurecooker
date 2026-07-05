@@ -59,7 +59,14 @@ PRESSURECOOKER ROUTING — invoke the matching skill via the Skill tool BEFORE a
 - All tasks done, integrating work -> pressurecooker:finishing-a-development-branch
 - Coding sessions default to pressurecooker:silent-dev output discipline (minimal narration; artifacts stay normal prose)
 
-SUBAGENT OUTPUT DISCIPLINE — MANDATORY. Subagents inherit NO hooks or skills; this rule is their only exposure. EVERY subagent prompt you dispatch — skill templates, Explore, reviewers, quick fixes, freeform Agent/Task calls, ALL of them — MUST end with this block VERBATIM:
+SUBAGENT DISPATCH DISCIPLINE — MANDATORY, two rules:
+
+RULE 1 — agent type. EVERY subagent you dispatch uses a pressurecooker agent type, whose system prompt enforces silence (a prompt footer alone loses to the default agent system prompt, which tells agents to narrate):
+- Task writes/edits/commits files -> subagent_type: pressurecooker:implementer
+- Task only reads, analyzes, reviews, investigates -> subagent_type: pressurecooker:investigator
+- Fall back to general-purpose/Explore ONLY if these types are unavailable, or for built-in specialist agents the task genuinely needs.
+
+RULE 2 — footer. EVERY subagent prompt — skill templates, Explore, reviewers, quick fixes, freeform Agent/Task calls, ALL of them, including pressurecooker-typed dispatches (belt-and-braces) — MUST end with this block VERBATIM:
 
   Output discipline (MANDATORY):
   - Work SILENT. NO text between tool calls — no preamble, no plan announcements,
@@ -72,7 +79,7 @@ SUBAGENT OUTPUT DISCIPLINE — MANDATORY. Subagents inherit NO hooks or skills; 
   - Shortest report that carries every required field; one line per finding.
   - Code, comments, commit messages: normal prose, never caveman.
 
-Skill prompt templates already embed this block — keep it when adapting them. Dispatching a subagent without it is a routing violation.
+Skill prompt templates already embed this block and name the agent type — keep both when adapting them. Dispatching a subagent without the type (when available) or without the footer is a routing violation.
 EOF
 )
 

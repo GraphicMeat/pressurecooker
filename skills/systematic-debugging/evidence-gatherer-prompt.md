@@ -6,7 +6,7 @@ It performs Phase 1–2 of systematic-debugging and reports; it does NOT edit co
 propose patches.
 
 ```
-Task tool (general-purpose):
+Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):
   description: "Investigate root cause: [one-line symptom]"
   prompt: |
     You are investigating a bug. You read, run diagnostics, and reason only —

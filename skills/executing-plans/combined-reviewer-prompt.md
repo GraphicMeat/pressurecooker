@@ -6,7 +6,7 @@ the implementer exactly as the two-stage flow does. Modifying and interface-chan
 tasks use the separate spec + quality reviewers instead.
 
 ```
-Task tool (general-purpose):
+Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):
   description: "Combined review for Task N: [task name]"
   prompt: |
     You are reviewing a completed ADDITIVE task — it should only add new code, with

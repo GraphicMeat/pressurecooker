@@ -7,7 +7,7 @@ This subagent reads and reasons only. It does NOT edit code.
 ## Preflight mode (Step 1 — run once before any task)
 
 ```
-Task tool (general-purpose):
+Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):
   description: "Pre-flight blast radius for [feature]"
   prompt: |
     You are analyzing the blast radius of a planned change BEFORE any code is written.
@@ -82,7 +82,7 @@ Task tool (general-purpose):
 ## Per-task mode (Step 2a — before each implementer)
 
 ```
-Task tool (general-purpose):
+Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):
   description: "Per-task compat check for Task N"
   prompt: |
     You are checking the compatibility impact of ONE task before it is implemented.

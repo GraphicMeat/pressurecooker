@@ -27,6 +27,9 @@ Inspired by the [superpowers](https://github.com/obra/superpowers) plugin.
 │   ├── verification-before-completion/
 │   ├── test-driven-development/  # + testing anti-patterns reference
 │   └── silent-dev/         # minimal-narration output discipline
+├── agents/                 # Subagent types with silence baked into their system prompts
+│   ├── implementer.md      # pressurecooker:implementer — writes code, TDD, single compressed report
+│   └── investigator.md     # pressurecooker:investigator — read-only analysis/review, never edits
 ├── hooks/                  # Event hooks
 │   ├── hooks.json
 │   └── session-start.sh    # dep check + skill routing map + map staleness + memory index
@@ -61,6 +64,8 @@ Standalone skills support the chain:
 - **test-driven-development** — the RED-GREEN-REFACTOR discipline every implementer runs: failing test first, minimal code, Step 4b regression check; characterization tests (refactors) explicitly distinguished
 
 The SessionStart hook injects the skill routing map every session, so the right skill fires without being remembered, and reports codebase-map staleness.
+
+All chain dispatches run on the plugin's own agent types — `pressurecooker:implementer` (writes files) and `pressurecooker:investigator` (read-only) — whose system prompts enforce working silently and returning one compressed report. A custom agent's system prompt replaces the default agent prompt entirely, so the silence rule can't be overridden by narration habits; prompt footers remain as a fallback for other agent types.
 
 ## Project memory & fable mode
 

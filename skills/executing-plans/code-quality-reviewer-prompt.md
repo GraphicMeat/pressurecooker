@@ -8,7 +8,7 @@ that it did not break existing behavior.
 **Only dispatch after spec compliance review passes (✅).**
 
 ```
-Task tool (general-purpose):
+Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):
   description: "Code quality review for Task N"
   prompt: |
     You are reviewing the code quality of a completed task. Read the actual diff and

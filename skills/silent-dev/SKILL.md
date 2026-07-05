@@ -49,7 +49,7 @@ Write normally for:
 
 - **caveman** compresses what you say; **silent-dev** cuts what you say at all. They compose: what little you emit is caveman-terse (unless a boundary above applies).
 - Chain skills' "Announce at start" lines → bracket tags under silent-dev.
-- **Subagents inherit neither** — hooks and skills don't reach them. Discipline reaches subagents only through the mandatory "Output discipline" dispatch footer (injected by the session-start routing rule and embedded in every prompt template). Never dispatch without it.
+- **Subagents inherit neither** — SessionStart context and skills don't reach them, and a prompt footer alone loses to the default agent's own system prompt (which tells it to narrate progress). Discipline reaches subagents at system-prompt level: dispatch work that writes files as `subagent_type: pressurecooker:implementer` and read-only analysis/review as `pressurecooker:investigator` — silence is baked into their agent definitions. Keep the "Output discipline" footer in every prompt too (belt-and-braces, and the only carrier when dispatching other agent types like Explore).
 
 ## Example
 
