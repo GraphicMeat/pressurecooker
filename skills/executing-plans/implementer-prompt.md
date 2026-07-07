@@ -2,6 +2,12 @@
 
 Use this template when dispatching an implementer subagent.
 
+**Batch mode** (skill's Batching Additive Tasks section): paste ALL batched task texts
+under Task Description and add this instruction — "This dispatch covers Tasks N–M. Run
+the full cycle (failing test → green → Step 4b → commit) per task, IN ORDER — one commit
+per task, never blended. Report status per task." Everything else in the template is
+unchanged.
+
 ```
 Task tool (subagent_type: pressurecooker:implementer — fall back to general-purpose only if the type is unavailable):
   description: "Implement Task N: [task name]"
@@ -16,10 +22,12 @@ Task tool (subagent_type: pressurecooker:implementer — fall back to general-pu
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
-    ## Compatibility findings (from the per-task blast-radius check)
+    ## Compatibility findings (pre-flight compat note, or per-task analyst report)
 
-    [Paste the per-task analyst's report: what this change must stay compatible with,
-    anything the implementer must also handle (defaults, migrations, callers)]
+    [Paste this task's compat note from the pre-flight report — or the per-task
+    analyst's report where the tier table dispatched one: what this change must stay
+    compatible with, anything the implementer must also handle (defaults, migrations,
+    callers)]
 
     ## Must-stay-green
 

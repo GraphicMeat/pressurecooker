@@ -1,9 +1,19 @@
-# Combined Reviewer Prompt Template (additive-tier tasks)
+# Combined Reviewer Prompt Template (additive tier; modifying tier under economy)
 
 Use this template for tasks whose `Risk:` tier is **additive** — it merges the spec
 compliance and code quality reviews into one dispatch. A ❌ on either dimension loops
-the implementer exactly as the two-stage flow does. Modifying and interface-changing
-tasks use the separate spec + quality reviewers instead.
+the implementer exactly as the two-stage flow does. Interface-changing tasks always
+use the separate spec + quality reviewers.
+
+**Modifying variant (economy mode ON, diff ≤2 files):** same template, with dimension 2
+replaced — instead of the additive check, verify **compatibility**: existing consumers
+of the touched code still work, and any cascade the compat note named (defaults,
+migrations, callers) was handled. Adjust the report's tier-check line accordingly.
+
+**Batch mode:** several additive tasks may arrive in one dispatch (see the skill's
+Batching Additive Tasks section). Paste every task text, review each task's commit
+against its own spec, and give a per-task verdict — one ❌ loops the implementer on
+that task only.
 
 ```
 Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):

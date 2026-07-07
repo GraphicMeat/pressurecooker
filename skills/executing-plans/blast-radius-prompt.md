@@ -41,6 +41,12 @@ Task tool (subagent_type: pressurecooker:investigator — fall back to general-p
     codebase instead of cold discovery, and report corrections — the controller
     writes them back to memory after pre-flight.]
 
+    ## Plan tasks (for per-task compat notes)
+
+    [One line per task: "Task N — Files: [...] — adds/changes: [fields/interfaces]".
+    The analyst turns these into the per-task compat notes below, replacing
+    separate per-task dispatches for additive and modifying tasks.]
+
     ## Your job
 
     Working from the CURRENT codebase, determine for the change as a whole:
@@ -60,11 +66,18 @@ Task tool (subagent_type: pressurecooker:investigator — fall back to general-p
     3. **Coverage** — Find existing tests that exercise the affected paths. Report any
        the plan's must-stay-green set missed. These get added to must-stay-green.
 
+    4. **Per-task compat notes** — For EACH task in the "Plan tasks" list, distill
+       your findings into one note: what that task's change must stay compatible
+       with, anything its implementer must also handle (default, migration, caller),
+       cascades relevant to it, and its must-stay-green slice. A task your analysis
+       raises nothing for gets "no note beyond globals".
+
     ## Report
 
     - **Forward-compat verdict:** per field — OK as-is / needs default+migration / breaks callers (list file:line)
     - **Cascade gaps:** required changes NOT in the plan (file:line + what must change), or "none"
     - **Expanded must-stay-green:** existing tests the plan missed, or "plan set is complete"
+    - **Per-task compat notes:** Task N → [note or "no note beyond globals"], one line per task
     - **Recommendation:** SAFE TO PROCEED / PLAN NEEDS UPDATE (with specifics)
 
     Output discipline (MANDATORY):
@@ -79,7 +92,12 @@ Task tool (subagent_type: pressurecooker:investigator — fall back to general-p
     - Code, comments, commit messages: normal prose, never caveman.
 ```
 
-## Per-task mode (Step 2a — before each implementer)
+## Per-task mode (Step 2a — fallback only)
+
+Dispatch this mode ONLY for interface-changing tasks, or when the pre-flight
+per-task compat note is missing or stale (the task's scope drifted since
+pre-flight ran). Additive and modifying tasks normally consume their pre-flight
+note directly — no dispatch.
 
 ```
 Task tool (subagent_type: pressurecooker:investigator — fall back to general-purpose only if the type is unavailable):

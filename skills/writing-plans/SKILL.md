@@ -216,4 +216,4 @@ After saving the plan, hand off to execution. There is one execution path — su
 > "Plan complete and saved to `docs/pressurecooker/plans/<filename>.md`. I'll execute it with executing-plans: pre-flight blast-radius analysis, then a fresh subagent per task with per-task compatibility checks and two-stage review."
 
 - REQUIRED SUB-SKILL: Use `pressurecooker:executing-plans`
-- It runs pre-flight blast radius, then dispatches implementer + reviewer subagents per task. The controller never implements directly.
+- It runs pre-flight blast radius (which also emits per-task compat notes), then dispatches implementer + reviewer subagents per task — honoring `Execution: inline` stamps, batching eligible additive tasks, and overlapping/parallelizing disjoint tasks under its Concurrency gate.
