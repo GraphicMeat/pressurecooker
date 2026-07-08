@@ -51,7 +51,9 @@ Task tool (subagent_type: pressurecooker:investigator — fall back to general-p
     it through the modifying/interface-changing flow.
 
     **3. Quality:** each new file one clear responsibility with a well-defined
-    interface? Clear names? No overbuilding (YAGNI)? Follows existing patterns?
+    interface? Clear names? No overbuilding (YAGNI — includes speculative
+    abstractions: an interface with one implementation and one consumer)? New code
+    depends on defined boundaries, not neighbor internals? Follows existing patterns?
     Tests verify real behavior, not mocks of it?
 
     **4. Must-stay-green:** run or inspect the named tests — confirm still green.

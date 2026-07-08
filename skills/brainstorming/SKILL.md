@@ -102,6 +102,7 @@ digraph brainstorming {
 - Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
 - For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
 - Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
+- SOLID names these boundary tests: single responsibility per unit, extension points only where variation is real (open/closed vs YAGNI — real wins), substitutes honor the base contract (Liskov), interfaces split along consumer lines (segregation), dependencies point at boundaries not internals (inversion). Use it as a boundary check, never as license for speculative abstraction.
 - Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
 
 **Working in existing codebases:**
@@ -157,5 +158,6 @@ Wait for the user's response. If they request changes, make them and re-run the 
 - **YAGNI ruthlessly** - Remove unnecessary features from all designs
 - **Explore alternatives** - Always propose 2-3 approaches before settling, and always recommend one, grounded in industry practices where they apply
 - **KISS & TDD** - Keep it simple; drive with tests
+- **SOLID, KISS-guarded** - Boundaries follow SOLID; abstractions only where variation is real
 - **Incremental validation** - Present design, get approval before moving on
 - **Be flexible** - Go back and clarify when something doesn't make sense

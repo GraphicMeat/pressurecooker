@@ -46,7 +46,7 @@ The skills form one chain — each hands off to the next:
 brainstorming → writing-plans → using-git-worktrees → executing-plans → finishing-a-development-branch
 ```
 
-- **brainstorming** — idea → approved design spec (TDD/KISS, industry research for user-facing features)
+- **brainstorming** — idea → approved design spec (TDD/KISS/SOLID, industry research for user-facing features)
 - **writing-plans** — spec → task-by-task plan with blast-radius / impact analysis
 - **using-git-worktrees** — isolated workspace + clean baseline (the regression reference)
 - **executing-plans** — subagent-driven by default: pre-flight + per-task blast radius, implementer + two-stage review per task; criteria-gated inline economy tier for small additive/warm-context tasks

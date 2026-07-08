@@ -51,9 +51,12 @@ Task tool (subagent_type: pressurecooker:investigator — fall back to general-p
       appears in the diff — code, tests, fixtures, logs, error messages, comments. A
       surfaced secret is always Critical (rotation needed, not just removal).
 
-    **Decomposition:** does each file have one clear responsibility with a well-defined
-      interface? Can units be understood and tested independently? Does it follow the
-      plan's file structure?
+    **Decomposition (SOLID, KISS-guarded):** does each file have one clear responsibility
+      with a well-defined interface? Can units be understood and tested independently?
+      Does it follow the plan's file structure? Do substitutes honor their base contract
+      (no narrowed inputs, no surprise throws)? Do modules depend on boundaries rather
+      than a neighbor's internals? Flag BOTH failure modes: a unit doing several jobs,
+      AND a speculative abstraction (interface with one implementation and one consumer).
 
     **File growth:** did this change create files that are already large, or significantly
       grow existing ones? (Don't flag pre-existing file sizes — focus on what THIS change

@@ -79,6 +79,9 @@ Task tool (subagent_type: pressurecooker:implementer — fall back to general-pu
 
     - Follow the file structure defined in the plan
     - Each file should have one clear responsibility with a well-defined interface
+    - SOLID within task scope: substitutes honor base contracts (no surprise throws or
+      narrowed inputs); depend on the interfaces the plan defines, not a neighbor's
+      internals. No speculative abstractions — that's YAGNI, not design.
     - If a file you're creating grows beyond the plan's intent, stop and report
       DONE_WITH_CONCERNS — don't split files on your own without plan guidance
     - In existing codebases, follow established patterns. Improve code you're touching

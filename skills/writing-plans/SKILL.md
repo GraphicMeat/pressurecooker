@@ -7,7 +7,7 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it, and what their change could break. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. KISS. Frequent commits.
+Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it, and what their change could break. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. KISS. SOLID. Frequent commits.
 
 Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
 
@@ -43,6 +43,13 @@ Summarize the blast radius in a few lines. Every task that touches an at-risk ar
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
 
 Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
+
+Apply SOLID here, KISS-guarded — it shapes boundaries, not ceremony:
+- **S**ingle responsibility: one reason to change per unit (the rule above).
+- **O**pen/closed: where the plan knows variation is coming (multiple formats, providers, rules), design the extension point now so new cases add code instead of editing working code. Where variation is speculative, don't — YAGNI wins.
+- **L**iskov: anything substitutable (subtype, implementation, mock) must honor the base contract — same invariants, no surprise throws or narrowed inputs.
+- **I**nterface segregation: consumers depend only on what they use; split fat interfaces along consumer lines.
+- **D**ependency inversion: modules depend on the boundary (interface/signature), not on a concrete neighbor's internals — this is what keeps must-stay-green sets small. An interface with exactly one implementation and one consumer is usually YAGNI violation, not DIP.
 
 You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
 
@@ -194,7 +201,7 @@ Every step must contain the actual content an engineer needs. These are plan fai
 - Complete code in every step — if a step changes code, show the code
 - Exact commands with expected output
 - Every task carries its Impact block — breaks-risk and must-stay-green
-- DRY, YAGNI, TDD, KISS, frequent commits
+- DRY, YAGNI, TDD, KISS, SOLID (KISS-guarded), frequent commits
 
 ## Self-Review
 
